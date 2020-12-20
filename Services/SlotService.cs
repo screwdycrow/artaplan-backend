@@ -30,8 +30,6 @@ namespace Artaplan.Services
 
         public  async Task<Slot> Create(Slot slot)
         {
-
-
             slot.UserId = userId;
             foreach (Stage stage in slot.Stages)
             {
@@ -51,7 +49,7 @@ namespace Artaplan.Services
         {
            try
             {
-                var slots = await _context.Slots.Where(s => s.UserId == userId).ToListAsync();
+                var slots = await _context.Slots.Where(s => s.UserId == userId).Include(s=> s.Stages).ToListAsync();
                 return slots;
             }
             catch (Exception e) 
@@ -63,8 +61,19 @@ namespace Artaplan.Services
 
         public async Task<Slot> GetById(int id)
         {
-            var slot = await _context.Slots.FindAsync(id);
-            return slot;
+            try
+            {
+                var slot = await _context.Slots
+                    .Include(s => s.Stages)
+                    .Where(s => s.UserId == userId)
+                    .Where(s => s.SlotId == id)
+                    .FirstAsync();
+                return slot;
+            } catch (Exception e)
+            {
+                throw (e);
+            }
+       
         }
 
         public Task<Slot> Update(Slot slot)
