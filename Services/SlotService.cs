@@ -49,7 +49,10 @@ namespace Artaplan.Services
         {
            try
             {
-                var slots = await _context.Slots.Where(s => s.UserId == userId).Include(s=> s.Stages).ToListAsync();
+                var slots = await _context.Slots
+                    .Where(s => s.UserId == userId)
+                    .Include(s=> s.Stages)
+                    .ToListAsync();
                 return slots;
             }
             catch (Exception e) 
