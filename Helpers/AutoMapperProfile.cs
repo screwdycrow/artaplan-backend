@@ -7,6 +7,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Artaplan.MapModels.Slots;
 using Artaplan.MapModels.Stages;
+using Artaplan.MapModels.Jobs;
+using Artaplan.MapModels.Customers;
 
 namespace Artaplan.Helpers
 {
@@ -20,7 +22,14 @@ namespace Artaplan.Helpers
             CreateMap<Slot, SlotDTO>();
             CreateMap<SlotDTO, Slot>();
             CreateMap<Stage, StageDTO>();
-            CreateMap<StageDTO,Stage>();
+            CreateMap<StageDTO, Stage>();
+            CreateMap<JobDTO, Job>();
+            CreateMap<Job, JobDTO>();
+            CreateMap<JobStageDTO, JobStage>();
+            CreateMap<JobStage, JobStageDTO >();
+            CreateMap<Customer, CustomerDTO>();
+            CreateMap<CustomerDTO, Customer>();
+
         }
     }
 }
