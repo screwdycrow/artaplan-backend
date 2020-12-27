@@ -17,8 +17,8 @@ namespace Artaplan.Models
         public string Tags { get; set; }
         public string Color { get; set; }
         public string Name { get; set; }
-        public DateTime ToStartAt { get; set; }
-        public DateTime StartedAt { get; set; }
+        public DateTime? ToStartAt { get; set; }
+        public DateTime? StartedAt { get; set; }
         public DateTime InsertedAt { get; set; }
         public double Price { get; set; }
         public int Priority { get; set; }
