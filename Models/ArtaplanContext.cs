@@ -10,13 +10,14 @@ namespace Artaplan.Models
 {
     public partial class ArtaplanContext : DbContext
     {
-        private readonly AppSettings _appSettings;
+        private AppSettings _appSettings;
+
         public ArtaplanContext()
         {
         }
 
         public ArtaplanContext(DbContextOptions<ArtaplanContext> options, IOptions<AppSettings> appSettings)
-            : base(options)
+       : base(options)
         {
             _appSettings = appSettings.Value;
 
@@ -35,6 +36,7 @@ namespace Artaplan.Models
             if (!optionsBuilder.IsConfigured)
             {
                 optionsBuilder.UseSqlServer(_appSettings.ConnectionString);
+
             }
         }
 
@@ -70,9 +72,9 @@ namespace Artaplan.Models
                 entity.HasIndex(e => e.CustomerId, "fkIdx_82");
 
                 entity.Property(e => e.Color)
-                    .IsRequired()
                     .HasMaxLength(10)
                     .IsUnicode(false)
+                    .HasDefaultValueSql("(getdate())")
                     .IsFixedLength(true);
 
                 entity.Property(e => e.CustomerId).HasColumnName("CustomerID");
@@ -84,16 +86,12 @@ namespace Artaplan.Models
                     .HasMaxLength(80)
                     .IsUnicode(false);
 
-                entity.Property(e => e.References).IsRequired();
-
                 entity.Property(e => e.StartedAt).HasColumnType("date");
 
                 entity.Property(e => e.Status)
                     .IsRequired()
                     .HasMaxLength(50)
                     .IsUnicode(false);
-
-                entity.Property(e => e.Tags).IsRequired();
 
                 entity.Property(e => e.ToStartAt).HasColumnType("date");
 
