@@ -21,7 +21,6 @@ namespace Artaplan.Models
         public int UserId { get; set; }
         public int SlotId { get; set; }
         public int Order { get; set; }
-
         public virtual Slot Slot { get; set; }
         public virtual User User { get; set; }
         public virtual ICollection<JobStage> JobStages { get; set; }

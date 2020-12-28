@@ -106,7 +106,6 @@ namespace Artaplan.Controllers
         public async Task<ActionResult<SlotDTO>> PostSlots(Slot slot)
         {
             slot = await _slotService.Create(slot);
-
             return _mapper.Map<SlotDTO>(slot);
         }
 
