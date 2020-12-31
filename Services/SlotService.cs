@@ -19,6 +19,7 @@ namespace Artaplan.Services
     public class SlotService : ISlotService
     {
         private ArtaplanContext _context;
+        //Todo: userprovider + userId? 
         private IUserProvider _userProvider;
         private int userId;
         public SlotService(ArtaplanContext context, IUserProvider userProvider)
@@ -47,35 +48,22 @@ namespace Artaplan.Services
 
         public async Task<IEnumerable<Slot>> GetAll()
         {
-           try
-            {
-                var slots = await _context.Slots
-                    .Where(s => s.UserId == userId)
-                    .Include(s=> s.Stages)
-                    .ToListAsync();
-                return slots;
-            }
-            catch (Exception e) 
-            {
-                throw (e);
-            }
+            var slots = await _context.Slots
+                .Where(s => s.UserId == userId)
+                .Include(s=> s.Stages)
+                .ToListAsync();
+            return slots;
         
         }
 
         public async Task<Slot> GetById(int id)
         {
-            try
-            {
-                var slot = await _context.Slots
-                    .Include(s => s.Stages)
-                    .Where(s => s.UserId == userId)
-                    .Where(s => s.SlotId == id)
-                    .FirstAsync();
-                return slot;
-            } catch (Exception e)
-            {
-                throw (e);
-            }
+            var slot = await _context.Slots
+                .Include(s => s.Stages)
+                .Where(s => s.UserId == userId)
+                .Where(s => s.SlotId == id)
+                .FirstAsync();
+            return slot;
        
         }
 

@@ -12,7 +12,7 @@ namespace Artaplan.MapModels.Jobs
         public int WorkHours { get; set; }
         public int JobHours { get; set; }
         public int Order { get; set; }
-        public DateTime Deadline { get; set; }
+        public DateTime? Deadline { get; set; }
         public int JobId { get; set; }
         public int StageId { get; set; }
 

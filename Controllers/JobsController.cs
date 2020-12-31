@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Artaplan.Helpers;
 using Artaplan.MapModels.Jobs;
 using Artaplan.Models;
 using Artaplan.Services;
@@ -35,10 +36,24 @@ namespace Artaplan.Controllers
             _jobService = jobService;
         }
 
+        // POST: api/Jobs
+        [HttpPost]
         public async Task<ActionResult<JobDTO>> PostJob(JobDTO jobDTO)
         {
             var job = _mapper.Map<Job>(jobDTO);
             var Addedjob = await _jobService.Create(job);
+            return _mapper.Map<JobDTO>(Addedjob);
+        }
+
+        // GET: api/Jobs/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<JobDTO>> GetJob(int id)
+        {
+            Job job = await _jobService.GetById(id);
+            if (job == null)
+            {
+                return NotFound();
+            }
             return _mapper.Map<JobDTO>(job);
         }
     }
