@@ -10,7 +10,7 @@ using Artaplan.Services;
 using Microsoft.AspNetCore.Authorization;
 using AutoMapper;
 using Artaplan.MapModels.Slots;
-using Artaplan.Helpers;
+using Artaplan.Errors;
 
 namespace Artaplan.Controllers
 {
@@ -48,7 +48,7 @@ namespace Artaplan.Controllers
 
             }catch(Exception)
             {
-                return BadRequest(new ErrorMessage(null, 500));
+                return BadRequest(ErrorMessage.ShowErrorMessage(Error.InternalServerError));
             }
 
         }
@@ -61,7 +61,7 @@ namespace Artaplan.Controllers
             Slot slot = await _slotService.GetById(id);
             if (slot == null)
             {
-                return NotFound(new ErrorMessage("this slot does not exist", 404));
+                return NotFound(ErrorMessage.ShowErrorMessage(Error.SlotNotFound));
             }
 
             return _mapper.Map<SlotDTO>(slot); 
@@ -71,14 +71,15 @@ namespace Artaplan.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutSlots(int id, Slot slots)
+        //Todo: use update from service possibly?
+        public async Task<ActionResult<SlotDTO>> PutSlots(int id, Slot slot)
         {
-            if (id != slots.SlotId)
+            if (id != slot.SlotId)
             {
-                return BadRequest(new ErrorMessage("the id of the slot is not the same with the id you provided",404));
+                return BadRequest(ErrorMessage.ShowErrorMessage(Error.NonMatchingId));
             }
 
-            _context.Entry(slots).State = EntityState.Modified;
+            _context.Entry(slot).State = EntityState.Modified;
 
             try
             {
@@ -88,7 +89,7 @@ namespace Artaplan.Controllers
             {
                 if (!SlotsExists(id))
                 {
-                    return NotFound(new ErrorMessage("this slot does not exist",404));
+                    return NotFound(ErrorMessage.ShowErrorMessage(Error.SlotNotFound));
                 }
                 else
                 {
@@ -96,7 +97,7 @@ namespace Artaplan.Controllers
                 }
             }
 
-            return NoContent();
+            return _mapper.Map<SlotDTO>(slot);
         }
 
         // POST: api/Slots
@@ -111,6 +112,7 @@ namespace Artaplan.Controllers
 
         // DELETE: api/Slots/5
         [HttpDelete("{id}")]
+        //Todo: use delete from the service lul
         public async Task<ActionResult<Slot>> DeleteSlots(int id)
         {
             var slots = await _context.Slots.FindAsync(id);

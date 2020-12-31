@@ -10,12 +10,13 @@ using Microsoft.AspNetCore.Authorization;
 using Artaplan.MapModels.Users;
 using Artaplan.Services;
 using AutoMapper;
-using Artaplan.Helpers;
+using Artaplan.Errors;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Options;
 using System.Security.Claims;
+using Artaplan.Helpers;
 
 namespace Artaplan.Controllers
 {
@@ -52,7 +53,7 @@ namespace Artaplan.Controllers
             var user = _userService.Authenticate(model.Username, model.Password);
 
             if (user == null)
-                return BadRequest(new ErrorMessage("Could not authenticate user",401));
+                return BadRequest(ErrorMessage.ShowErrorMessage(Error.FailedAuthentication));
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
@@ -85,7 +86,7 @@ namespace Artaplan.Controllers
               var user = await _context.Users.FindAsync(id);
             if (user == null)
             {
-                return NotFound(new ErrorMessage("could not find user",404));
+                return NotFound(ErrorMessage.ShowErrorMessage(Error.UserNotFound));
             }
 
             return  Ok(_mapper.Map<UserDTO>(user));
@@ -161,7 +162,7 @@ namespace Artaplan.Controllers
             catch (AppException ex)
             {
                 // return error message if there was an exception
-                return BadRequest(new ErrorMessage(ex.Message,500));
+                return BadRequest(ErrorMessage.ShowErrorMessage(Error.InternalServerError));
             }
         }
         // DELETE: api/Users/5

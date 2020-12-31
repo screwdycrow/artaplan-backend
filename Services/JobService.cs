@@ -13,8 +13,8 @@ namespace Artaplan.Services
 
         Task<IEnumerable<Job>> GetAll();
         void Delete();
-        Task<Job> Update(Job slot);
-        Task<Job> Create(Job slot);
+        Task<Job> Update(Job job);
+        Task<Job> Create(Job job);
     }
     public class JobService : IJobService
     {
@@ -43,36 +43,22 @@ namespace Artaplan.Services
 
         public async Task<IEnumerable<Job>> GetAll()
         {
-            try
-            {
-                var jobs = await _context.Jobs
-                    .Where(s => s.UserId == userId)
-                    .Include(j => j.JobStages)
-                    .ToListAsync();
-                return jobs;
-            }
-            catch (Exception e)
-            {
-                throw (e);
-            }
+            var jobs = await _context.Jobs
+                .Where(s => s.UserId == userId)
+                .Include(j => j.JobStages)
+                .ToListAsync();
+            return jobs;
         }
 
         public async Task<Job> GetById(int id)
         {
-            try
-            {
                 var job = await _context.Jobs
                    .Where(s => s.JobId == id)
                    .Where(s => s.UserId == userId)
                    .Include(s => s.JobStages)
                    .Include(s => s.Slot)
-                   .FirstAsync();
+                   .FirstOrDefaultAsync();
                 return job;
-            }
-            catch (Exception e)
-            {
-                throw (e);
-            }
 
         }
 
