@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Artaplan.Errors;
 using Artaplan.Helpers;
 using Artaplan.MapModels.Jobs;
 using Artaplan.Models;
@@ -22,7 +23,7 @@ namespace Artaplan.Controllers
         private readonly ArtaplanContext _context;
         private readonly IMapper _mapper;
         private readonly IJobService _jobService;
-       
+
         public JobsController(
             ArtaplanContext context,
             IUserProvider userProvider,
@@ -36,6 +37,20 @@ namespace Artaplan.Controllers
             _jobService = jobService;
         }
 
+
+        public async Task<ActionResult<IEnumerable<JobDTO>>> GetJobs(){
+            try
+            {
+          
+                var jobs = await _jobService.GetAll();
+                return Ok(_mapper.Map<List<JobDTO>>(jobs));
+            }
+            catch (Exception)
+            {
+                return BadRequest(ErrorMessage.ShowErrorMessage(Error.InternalServerError));
+            }
+
+        }
         // POST: api/Jobs
         [HttpPost]
         public async Task<ActionResult<JobDTO>> PostJob(JobDTO jobDTO)
