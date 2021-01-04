@@ -21,19 +21,28 @@ namespace Artaplan.Services
         private ArtaplanContext _context;
         private IUserProvider _userProvider;
         private int userId;
-        public JobService(ArtaplanContext context, IUserProvider userProvider)
+        private ICustomerService _customerService;
+        public JobService(ArtaplanContext context, IUserProvider userProvider,ICustomerService customerService)
         {
             _context = context;
             _userProvider = userProvider;
+            _customerService = customerService;
             userId = userProvider.GetUserId();
         }
         public async Task<Job> Create(Job job)
         {
             job.UserId = userId;
+
+            //add customer if not found
+            var customer = await _customerService.GetById(job.CustomerId);
+            job.Slot = null; 
+            if(customer != null)
+            {
+                job.Customer = null; 
+            }
             _context.Jobs.Add(job);
             await _context.SaveChangesAsync();
             return job;
-
         }
 
         public void Delete()
