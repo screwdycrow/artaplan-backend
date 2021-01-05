@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -116,32 +116,18 @@ namespace Artaplan.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUsers(int id, User users)
+        public async Task<ActionResult<User>> PutUsers(int id, User user)
         {
-            if (id != users.UserId)
+            if (id != user.UserId)
             {
                 return BadRequest();
             }
-
-            _context.Entry(users).State = EntityState.Modified;
-
-            try
+            if (await _context.Users.FindAsync(user.UserId) == null)
             {
-                await _context.SaveChangesAsync();
+                return NotFound();
             }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UsersExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            user = await _userService.Update(user);
+            return user;
         }
 
         // POST: api/Users/register

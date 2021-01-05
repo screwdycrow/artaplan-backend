@@ -1,4 +1,4 @@
-﻿using Artaplan.Errors;
+using Artaplan.Errors;
 using Artaplan.MapModels.Customers;
 using Artaplan.Models;
 using Artaplan.Services;
@@ -37,18 +37,15 @@ namespace Artaplan.Controllers
 
         // GET: api/Customers
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Slot>>> GetCustomers()
+        public async Task<ActionResult<IEnumerable<CustomerDTO>>> GetCustomers()
         {
-            try
+            var customers = await _customerService.GetAll();
+            if (customers.Any())
             {
-                var customers = await _customerService.GetAll();
-                return Ok(_mapper.Map<List<CustomerDTO>>(customers));
+                return NotFound();
+            }
 
-            }
-            catch
-            {
-                return BadRequest(ErrorMessage.ShowErrorMessage(Error.InternalServerError));
-            }
+            return _mapper.Map<List<CustomerDTO>>(customers);
 
         }
 
@@ -60,7 +57,7 @@ namespace Artaplan.Controllers
             var customer = await _customerService.GetById(id);
             if (customer == null)
             {
-                return NotFound(ErrorMessage.ShowErrorMessage(Error.CustomerNotFound));
+                return NotFound();
             }
 
             return _mapper.Map<CustomerDTO>(customer);
@@ -68,11 +65,59 @@ namespace Artaplan.Controllers
 
         // POST: api/Customers
         [HttpPost]
-        public async Task<ActionResult<CustomerDTO>> PostCustomers(Customer customer)
-        { 
+        public async Task<ActionResult<CustomerDTO>> PostCustomers(CustomerDTO customerDTO)
+        {
+            var customer = _mapper.Map<Customer>(customerDTO);
             customer = await _customerService.Create(customer);
             return _mapper.Map<CustomerDTO>(customer);
         }
 
+        //DELETE: api/Customers
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<CustomerDTO>> DeleteCustomer(int id, CustomerDTO customerDTO)
+        {
+            var customer = _mapper.Map<Customer>(customerDTO);
+            if (id != customer.CustomerId)
+            {
+                return BadRequest();
+            }
+            if (!_context.Customers.Where(x => x == customer).Any())
+            {
+                return NotFound();  
+            }
+            var jobs = _context.Jobs.Where(x => x.CustomerId == customer.CustomerId);
+            if (jobs.Any())
+            {
+                return Conflict();
+            }
+            customer = await _customerService.Delete(customer);
+            if (customer == null)
+            {
+                return NotFound();
+            }
+            return _mapper.Map<CustomerDTO>(customer);
+        }
+
+        //PUT: api/Customers/5
+        [HttpPut("{id}")]
+        public async Task<ActionResult<CustomerDTO>> UpdateCustomer(int id, CustomerDTO customerDTO)
+        {
+            var customer = _mapper.Map<Customer>(customerDTO);
+            if (customer.CustomerId != id)
+            {
+                return BadRequest();
+            }
+            if(!_context.Customers.Where(x => x == customer).Any())
+            {
+                await _customerService.Create(customer);
+                return _mapper.Map<CustomerDTO>(customer);
+            }
+            customer = await _customerService.Update(customer);
+            if (customer == null)
+            {
+                return NotFound();
+            }
+            return _mapper.Map<CustomerDTO>(customer);
+        }
     }   
 }
