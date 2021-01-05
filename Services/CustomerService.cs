@@ -1,4 +1,4 @@
-﻿using Artaplan.Models;
+using Artaplan.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ namespace Artaplan.Services
         Task<Customer> GetById(int id);
 
         Task<IEnumerable<Customer>> GetAll();
-        void Delete();
+        Task<Customer> Delete(Customer customer);
         Task<Customer> Update(Customer customer);
         Task<Customer> Create(Customer customer);
     }
@@ -37,10 +37,22 @@ namespace Artaplan.Services
             return customer;
         }
 
-        //Todo: delete by id/all?
-        public void Delete()
+        public async Task<Customer> Delete(Customer customer)
         {
-            throw new NotImplementedException();
+            if (userId != customer.UserId)
+            {    
+                return null;
+            }
+            try
+            {
+                _context.Customers.Remove(customer);
+                await _context.SaveChangesAsync();
+                return customer;
+            }
+            catch 
+            { 
+                return null;
+            }
         }
         
         public async Task<IEnumerable<Customer>> GetAll()
@@ -53,9 +65,15 @@ namespace Artaplan.Services
             return await _context.Customers.Where(x => x.CustomerId == id && x.UserId == userId).Include(x => x.Jobs).FirstOrDefaultAsync();
         }
 
-        public Task<Customer> Update(Customer customer)
+        public async Task<Customer> Update(Customer customer)
         {
-            throw new NotImplementedException();
+            if(customer.UserId != userId)
+            {
+                return null;
+            }
+            _context.Entry(customer).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+            return customer;
         }
     }
 }

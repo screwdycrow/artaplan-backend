@@ -1,4 +1,4 @@
-﻿using Artaplan.Models;
+using Artaplan.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ namespace Artaplan.Services
         Task<Job> GetById(int id);
 
         Task<IEnumerable<Job>> GetAll();
-        void Delete();
+        Task<Job> Delete(Job job);
         Task<Job> Update(Job job);
         Task<Job> Create(Job job);
     }
@@ -22,7 +22,7 @@ namespace Artaplan.Services
         private IUserProvider _userProvider;
         private int userId;
         private ICustomerService _customerService;
-        public JobService(ArtaplanContext context, IUserProvider userProvider,ICustomerService customerService)
+        public JobService(ArtaplanContext context, IUserProvider userProvider, ICustomerService customerService)
         {
             _context = context;
             _userProvider = userProvider;
@@ -35,19 +35,32 @@ namespace Artaplan.Services
 
             //add customer if not found
             var customer = await _customerService.GetById(job.CustomerId);
-            job.Slot = null; 
-            if(customer != null)
+            job.Slot = null;
+            if (customer != null)
             {
-                job.Customer = null; 
+                job.Customer = null;
             }
             _context.Jobs.Add(job);
             await _context.SaveChangesAsync();
             return job;
         }
 
-        public void Delete()
+        public async Task<Job> Delete(Job job)
         {
-            throw new NotImplementedException();
+            if(job.UserId != userId)
+            {
+                return null;
+            }
+            try
+            {
+                _context.Jobs.Remove(job);
+                await _context.SaveChangesAsync();
+                return job;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public async Task<IEnumerable<Job>> GetAll()
@@ -71,9 +84,15 @@ namespace Artaplan.Services
 
         }
 
-        public Task<Job> Update(Job slot)
+        public async Task<Job> Update(Job job)
         {
-            throw new NotImplementedException();
+            if(job.UserId != userId)
+            {
+                return null;
+            }
+            _context.Entry(job).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+            return job;
         }
     }
 }

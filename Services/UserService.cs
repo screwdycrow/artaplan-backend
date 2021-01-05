@@ -1,10 +1,11 @@
-﻿using Artaplan.Models;
+using Artaplan.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Security.Cryptography;
 using Artaplan.Helpers;
+using Microsoft.EntityFrameworkCore;
 
 namespace Artaplan.Services
 {
@@ -13,7 +14,7 @@ namespace Artaplan.Services
         User Authenticate(string username, string password);
         IEnumerable<User> GetAll();
         User Create(User user, string password);
-        void Update(User user, string password = null);
+        Task<User> Update(User user, string password = null);
         void Delete(int id);
         User GetById(int id);
     }
@@ -111,9 +112,11 @@ namespace Artaplan.Services
             throw new NotImplementedException();
         }
       
-        public void Update(User user, string password = null)
+        public async Task<User> Update(User user, string password = null)
         {
-            throw new NotImplementedException();
+            _context.Entry(user).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+            return user;
         }
     }
 }
