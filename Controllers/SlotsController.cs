@@ -19,38 +19,31 @@ namespace Artaplan.Controllers
     [ApiController]
     public class SlotsController : ControllerBase
     {
-        private readonly IUserProvider _userProvider;
         private readonly ArtaplanContext _context;
         private readonly IMapper _mapper;
         private readonly ISlotService _slotService;
 
         public SlotsController(
             ArtaplanContext context,
-            IUserProvider userProvider,
             IMapper mapper,
             ISlotService slotService
             )
         {
             _mapper = mapper;
-            _userProvider = userProvider;
             _context = context;
             _slotService = slotService;
         }
 
         // GET: api/Slots
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Slot>>> GetSlots()
+        public async Task<ActionResult<IEnumerable<SlotDTO>>> GetSlots()
         {
-            try
+            var slots = await _slotService.GetAll();
+            if (!slots.Any())
             {
-             var slots = await _slotService.GetAll();
-                return Ok(_mapper.Map<List<SlotDTO>>(slots));
-
-            }catch(Exception)
-            {
-                return BadRequest(ErrorMessage.ShowErrorMessage(Error.InternalServerError));
+                return NotFound();
             }
-
+            return _mapper.Map<List<SlotDTO>>(slots);
         }
 
         // GET: api/Slots/5
@@ -61,7 +54,7 @@ namespace Artaplan.Controllers
             Slot slot = await _slotService.GetById(id);
             if (slot == null)
             {
-                return NotFound(ErrorMessage.ShowErrorMessage(Error.SlotNotFound));
+                return NotFound();
             }
 
             return _mapper.Map<SlotDTO>(slot); 
@@ -71,32 +64,22 @@ namespace Artaplan.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        //Todo: use update from service possibly?
-        public async Task<ActionResult<SlotDTO>> PutSlots(int id, Slot slot)
+        public async Task<ActionResult<SlotDTO>> UodateSlots(int id, SlotDTO slotDTO)
         {
+            var slot = _mapper.Map<Slot>(slotDTO);
             if (id != slot.SlotId)
             {
-                return BadRequest(ErrorMessage.ShowErrorMessage(Error.NonMatchingId));
+                return BadRequest();
             }
-
-            _context.Entry(slot).State = EntityState.Modified;
-
-            try
+            if(!_context.Slots.Where(x => x.SlotId == slot.SlotId).Any())
             {
-                await _context.SaveChangesAsync();
+                return _mapper.Map<SlotDTO>(await _slotService.Create(slot));
             }
-            catch (DbUpdateConcurrencyException)
+            slot = await _slotService.Update(slot);
+            if(slot == null)
             {
-                if (!SlotsExists(id))
-                {
-                    return NotFound(ErrorMessage.ShowErrorMessage(Error.SlotNotFound));
-                }
-                else
-                {
-                    throw;
-                }
+                NotFound();
             }
-
             return _mapper.Map<SlotDTO>(slot);
         }
 
@@ -104,32 +87,29 @@ namespace Artaplan.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<SlotDTO>> PostSlots(Slot slot)
+        public async Task<ActionResult<SlotDTO>> PostSlots(SlotDTO slotDTO)
         {
+            var slot = _mapper.Map<Slot>(slotDTO);
             slot = await _slotService.Create(slot);
             return _mapper.Map<SlotDTO>(slot);
         }
 
         // DELETE: api/Slots/5
         [HttpDelete("{id}")]
-        //Todo: use delete from the service lul
-        public async Task<ActionResult<Slot>> DeleteSlots(int id)
+        public async Task<ActionResult<SlotDTO>> DeleteSlots(int id)
         {
             var slots = await _context.Slots.FindAsync(id);
             if (slots == null)
             {
                 return NotFound();
             }
-
             _context.Slots.Remove(slots);
             await _context.SaveChangesAsync();
-
-            return slots;
-        }
-
-        private bool SlotsExists(int id)
-        {
-            return _context.Slots.Any(e => e.SlotId == id);
+            if (slots == null)
+            {
+                return NotFound();
+            }
+            return _mapper.Map<SlotDTO>(slots);
         }
     }
 }

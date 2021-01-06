@@ -17,20 +17,17 @@ namespace Artaplan.Controllers
     [ApiController]
     public class CustomersController : ControllerBase
     {
-        private readonly IUserProvider _userProvider;
         private readonly ArtaplanContext _context;
         private readonly IMapper _mapper;
         private readonly ICustomerService _customerService;
 
         public CustomersController(
             ArtaplanContext context,
-            IUserProvider userProvider,
             IMapper mapper,
             ICustomerService customerService
             )
         {
             _mapper = mapper;
-            _userProvider = userProvider;
             _context = context;
             _customerService = customerService;
         }
@@ -40,7 +37,7 @@ namespace Artaplan.Controllers
         public async Task<ActionResult<IEnumerable<CustomerDTO>>> GetCustomers()
         {
             var customers = await _customerService.GetAll();
-            if (customers.Any())
+            if (!customers.Any())
             {
                 return NotFound();
             }
@@ -74,21 +71,12 @@ namespace Artaplan.Controllers
 
         //DELETE: api/Customers
         [HttpDelete("{id}")]
-        public async Task<ActionResult<CustomerDTO>> DeleteCustomer(int id, CustomerDTO customerDTO)
+        public async Task<ActionResult<CustomerDTO>> DeleteCustomer(int id)
         {
-            var customer = _mapper.Map<Customer>(customerDTO);
-            if (id != customer.CustomerId)
-            {
-                return BadRequest();
-            }
-            if (!_context.Customers.Where(x => x == customer).Any())
+            var customer = await _customerService.GetById(id);
+            if (customer == null)
             {
                 return NotFound();  
-            }
-            var jobs = _context.Jobs.Where(x => x.CustomerId == customer.CustomerId);
-            if (jobs.Any())
-            {
-                return Conflict();
             }
             customer = await _customerService.Delete(customer);
             if (customer == null)

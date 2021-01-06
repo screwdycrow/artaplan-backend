@@ -1,6 +1,5 @@
 using Artaplan.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,25 +20,15 @@ namespace Artaplan.Services
         private ArtaplanContext _context;
         private IUserProvider _userProvider;
         private int userId;
-        private ICustomerService _customerService;
-        public JobService(ArtaplanContext context, IUserProvider userProvider, ICustomerService customerService)
+        public JobService(ArtaplanContext context, IUserProvider userProvider)
         {
             _context = context;
             _userProvider = userProvider;
-            _customerService = customerService;
             userId = userProvider.GetUserId();
         }
         public async Task<Job> Create(Job job)
         {
             job.UserId = userId;
-
-            //add customer if not found
-            var customer = await _customerService.GetById(job.CustomerId);
-            job.Slot = null;
-            if (customer != null)
-            {
-                job.Customer = null;
-            }
             _context.Jobs.Add(job);
             await _context.SaveChangesAsync();
             return job;
@@ -66,8 +55,10 @@ namespace Artaplan.Services
         public async Task<IEnumerable<Job>> GetAll()
         {
             var jobs = await _context.Jobs
-                .Where(s => s.UserId == userId)
+                .Where(j => j.UserId == userId)
                 .Include(j => j.JobStages)
+                .Include(j => j.Slot)
+                .Include(j => j.Customer)
                 .ToListAsync();
             return jobs;
         }
@@ -75,10 +66,11 @@ namespace Artaplan.Services
         public async Task<Job> GetById(int id)
         {
                 var job = await _context.Jobs
-                   .Where(s => s.JobId == id)
-                   .Where(s => s.UserId == userId)
-                   .Include(s => s.JobStages)
-                   .Include(s => s.Slot)
+                   .Where(j => j.JobId == id)
+                   .Where(j => j.UserId == userId)
+                   .Include(j => j.JobStages)
+                   .Include(j => j.Slot)
+                   .Include(j => j.Customer)
                    .FirstOrDefaultAsync();
                 return job;
 

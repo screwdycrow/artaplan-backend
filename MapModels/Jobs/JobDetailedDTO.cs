@@ -1,11 +1,13 @@
-﻿using System;
+﻿using Artaplan.MapModels.Customers;
+using Artaplan.MapModels.Slots;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Artaplan.MapModels.Jobs
 {
-    public class JobDTO
+    public class JobDetailedDTO
     {
         public int JobId { get; set; }
         public string Status { get; set; }
@@ -22,6 +24,8 @@ namespace Artaplan.MapModels.Jobs
         public int SlotId { get; set; }
         public int UserId { get; set; }
         public int CustomerId { get; set; }
+        public virtual SlotDTO Slot{ get; set; }
+        public virtual CustomerDTO Customer { get; set; }
         public virtual ICollection<JobStageDTO> JobStages { get; set; }
     }
 }
