@@ -10,26 +10,22 @@ namespace Artaplan.Services
     public interface ISlotService
     {
         Task<Slot> GetById(int id);
-
         Task<IEnumerable<Slot>> GetAll();
-        void Delete();
+        Task<Slot> Delete(Slot slot);
         Task<Slot> Update(Slot slot);
         Task<Slot> Create(Slot slot);
     }
     public class SlotService : ISlotService
     {
         private ArtaplanContext _context;
-        //Todo: userprovider + userId? 
-        private IUserProvider _userProvider;
         private int userId;
         public SlotService(ArtaplanContext context, IUserProvider userProvider)
         {
             _context = context;
-            _userProvider = userProvider;
             userId = userProvider.GetUserId();
         }
 
-        public  async Task<Slot> Create(Slot slot)
+        public async Task<Slot> Create(Slot slot)
         {
             slot.UserId = userId;
             foreach (Stage stage in slot.Stages)
@@ -41,9 +37,22 @@ namespace Artaplan.Services
             return slot;
         }
 
-        public void Delete()
+        public async Task<Slot> Delete(Slot slot)
         {
-            throw new NotImplementedException();
+            if (slot.UserId != userId)
+            {
+                return null;
+            }
+            try
+            {
+                _context.Slots.Remove(slot);
+                await _context.SaveChangesAsync();
+                return slot;
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public async Task<IEnumerable<Slot>> GetAll()
@@ -67,9 +76,15 @@ namespace Artaplan.Services
        
         }
 
-        public Task<Slot> Update(Slot slot)
+        public async Task<Slot> Update(Slot slot)
         {
-            throw new NotImplementedException();
+            if (slot.UserId != userId)
+            {
+                return null;
+            }
+            _context.Entry(slot).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+            return slot;
         }
     }
 }

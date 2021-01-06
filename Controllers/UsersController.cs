@@ -145,7 +145,7 @@ namespace Artaplan.Controllers
                 _userService.Create(user, model.Password);
                 return Ok("done");
             }
-            catch (AppException ex)
+            catch
             {
                 // return error message if there was an exception
                 return BadRequest(ErrorMessage.ShowErrorMessage(Error.InternalServerError));

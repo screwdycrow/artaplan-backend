@@ -18,18 +18,19 @@ namespace Artaplan.Helpers
         {
             CreateMap<RegisterModel, User>();
             CreateMap<User, UserDTO>();
-            CreateMap< UserDTO, User>();
+            CreateMap<UserDTO, User>();
             CreateMap<Slot, SlotDTO>();
             CreateMap<SlotDTO, Slot>();
             CreateMap<Stage, StageDTO>();
             CreateMap<StageDTO, Stage>();
-            CreateMap<JobDTO, Job>();
-            CreateMap<Job, JobDTO>();
+            CreateMap<JobDetailedDTO, Job>();
+            CreateMap<Job, JobDetailedDTO>();
             CreateMap<JobStageDTO, JobStage>();
             CreateMap<JobStage, JobStageDTO >();
             CreateMap<Customer, CustomerDTO>();
             CreateMap<CustomerDTO, Customer>();
-
+            CreateMap<Job, JobDTO>();
+            CreateMap<JobDTO, Job>();
         }
     }
 }
