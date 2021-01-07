@@ -20,26 +20,32 @@ namespace Artaplan.Services
     public class JobStageService : IJobStageService
     {
         private ArtaplanContext _context;
+        private IJobService _jobService;
+        private IStageService _stageService;
         private int userId;
-        public JobStageService(ArtaplanContext context, IUserProvider userProvider)
+        public JobStageService(ArtaplanContext context, IUserProvider userProvider, IJobService jobService, IStageService stageService)
         {
             _context = context;
+            _jobService = jobService;
+            _stageService = stageService;
             userId = userProvider.GetUserId();
         }
         public async Task<JobStage> Create(JobStage jobStage)
         {
-            jobStage.Job.UserId = userId;
+            if (!await BelongsToUser(jobStage))
+                return null;
+            jobStage.JobStageId = 0;
             _context.JobStages.Add(jobStage);
             await _context.SaveChangesAsync();
             return jobStage;
         }
 
+        
+
         public async Task<JobStage> Delete(JobStage jobStage)
         {
-            if (userId != jobStage.Job.UserId)
-            {
+            if (!await BelongsToUser(jobStage))
                 return null;
-            }
             try
             {
                 _context.JobStages.Remove(jobStage);
@@ -64,13 +70,18 @@ namespace Artaplan.Services
 
         public async Task<JobStage> Update(JobStage jobStage)
         {
-            if (jobStage.Job.UserId != userId)
-            {
+            if (!await BelongsToUser(jobStage))
                 return null;
-            }
             _context.Entry(jobStage).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             return jobStage;
+        }
+
+        private async Task<bool> BelongsToUser(JobStage jobStage)
+        {
+            var job = await _context.Jobs.Where(x => x.JobId == jobStage.JobId && x.UserId == userId).FirstOrDefaultAsync();
+            var stage = await _context.Stages.Where(x => x.StageId == jobStage.StageId && x.UserId == userId).FirstOrDefaultAsync();
+            return !(job == null || stage == null);
         }
     }
 }

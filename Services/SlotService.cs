@@ -28,6 +28,7 @@ namespace Artaplan.Services
         public async Task<Slot> Create(Slot slot)
         {
             slot.UserId = userId;
+            slot.SlotId = 0;
             foreach (Stage stage in slot.Stages)
             {
                 stage.UserId = userId;

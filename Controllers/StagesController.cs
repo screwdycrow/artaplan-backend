@@ -94,7 +94,7 @@ namespace Artaplan.Controllers
             {
                 return BadRequest();
             }
-            if (!_context.Stages.Where(x => x == stage).Any())
+            if (!_context.Stages.Where(x => x.StageId == stage.StageId).Any())
             {
                 await _stageService.Create(stage);
                 return _mapper.Map<StageDTO>(stage);

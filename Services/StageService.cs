@@ -31,6 +31,7 @@ namespace Artaplan.Services
         public async Task<Stage> Create(Stage stage)
         {
             stage.UserId = userId;
+            stage.StageId = 0;
             _context.Stages.Add(stage);
             await _context.SaveChangesAsync();
             return stage;

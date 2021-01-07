@@ -29,6 +29,7 @@ namespace Artaplan.Services
         public async Task<Customer> Create(Customer customer)
         {
             customer.UserId = userId;
+            customer.CustomerId = 0;
             _context.Customers.Add(customer);
             await _context.SaveChangesAsync();
             return customer;
