@@ -18,17 +18,16 @@ namespace Artaplan.Services
     public class JobService : IJobService
     {
         private ArtaplanContext _context;
-        private IUserProvider _userProvider;
         private int userId;
         public JobService(ArtaplanContext context, IUserProvider userProvider)
         {
             _context = context;
-            _userProvider = userProvider;
             userId = userProvider.GetUserId();
         }
         public async Task<Job> Create(Job job)
         {
             job.UserId = userId;
+            job.JobId = 0;
             _context.Jobs.Add(job);
             await _context.SaveChangesAsync();
             return job;

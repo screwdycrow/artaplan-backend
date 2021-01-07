@@ -95,7 +95,7 @@ namespace Artaplan.Controllers
             {
                 return BadRequest();
             }
-            if(!_context.Customers.Where(x => x == customer).Any())
+            if(!_context.Customers.Where(x => x.CustomerId == customer.CustomerId).Any())
             {
                 await _customerService.Create(customer);
                 return _mapper.Map<CustomerDTO>(customer);
