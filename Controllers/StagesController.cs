@@ -106,5 +106,27 @@ namespace Artaplan.Controllers
             }
             return _mapper.Map<StageDTO>(stage);
         }
+
+        //GET: api/Stages/tags
+        [HttpGet("tags")]
+        public async Task<IEnumerable<string>> GetTags()
+        {
+
+            var lineTags= (await _stageService.GetAll()).Select(x => x.Tags);
+            HashSet<string> uniqueTags = new HashSet<string>();
+            foreach(var line in lineTags)
+            {
+                if (line != null)
+                {
+                    var tags = line.Split(',');
+                    foreach (var tag in tags)
+                    {
+                        uniqueTags.Add(tag.Trim());
+                    }
+                }
+            }
+            return uniqueTags;
+        }
     }
 }
+
