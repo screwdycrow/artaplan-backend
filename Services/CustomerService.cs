@@ -20,13 +20,10 @@ namespace Artaplan.Services
     public class CustomerService : ICustomerService
     {
         private ArtaplanContext _context;
-        //Todo: useless?
-        private IUserProvider _userProvider;
         private int userId;
         public CustomerService(ArtaplanContext context, IUserProvider userProvider)
         {
             _context = context;
-            _userProvider = userProvider;
             userId = userProvider.GetUserId();
         }
         public async Task<Customer> Create(Customer customer)
@@ -62,7 +59,7 @@ namespace Artaplan.Services
         
         public async Task<Customer> GetById(int id)
         {
-            return await _context.Customers.Where(x => x.CustomerId == id && x.UserId == userId).Include(x => x.Jobs).FirstOrDefaultAsync();
+            return await _context.Customers.Where(x => x.CustomerId == id && x.UserId == userId).FirstOrDefaultAsync();
         }
 
         public async Task<Customer> Update(Customer customer)
