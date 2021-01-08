@@ -26,11 +26,15 @@ namespace Artaplan.Helpers
             CreateMap<JobDetailedDTO, Job>();
             CreateMap<Job, JobDetailedDTO>();
             CreateMap<JobStageDTO, JobStage>();
-            CreateMap<JobStage, JobStageDTO >();
+            CreateMap<JobStage, JobStageDTO>();
             CreateMap<Customer, CustomerDTO>();
             CreateMap<CustomerDTO, Customer>();
             CreateMap<Job, JobDTO>();
             CreateMap<JobDTO, Job>();
+            CreateMap<ScheduleEntry, ScheduleEntryDTO>();
+            CreateMap<ScheduleEntryDTO, ScheduleEntry>();
+            CreateMap<ScheduleEntry, ScheduleEntryDetailedDTO>();
+            CreateMap<ScheduleEntryDetailedDTO, ScheduleEntry>();
         }
     }
 }

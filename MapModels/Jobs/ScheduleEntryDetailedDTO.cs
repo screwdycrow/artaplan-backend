@@ -1,18 +1,18 @@
-﻿using System;
+﻿using Artaplan.Models;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-#nullable disable
-
-namespace Artaplan.Models
+namespace Artaplan.MapModels.Jobs
 {
-    public partial class ScheduleEntry
+    public class ScheduleEntryDetailedDTO
     {
         public int ScheduleEntriesId { get; set; }
         public DateTime DateFrom { get; set; }
         public DateTime DateTo { get; set; }
         public int JobStageId { get; set; }
-
+        public int UserId { set; get; }
         public virtual JobStage JobStage { get; set; }
-        public int UserId { get; internal set; }
     }
 }

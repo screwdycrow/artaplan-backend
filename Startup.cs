@@ -97,6 +97,7 @@ namespace Artaplan
             services.AddScoped<ICustomerService, CustomerService>();
             services.AddScoped<IStageService, StageService>();
             services.AddScoped<IJobStageService, JobStageService>();
+            services.AddScoped<IScheduleEntryService, ScheduleEntryService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
