@@ -13,6 +13,6 @@ namespace Artaplan.MapModels.Jobs
         public DateTime DateTo { get; set; }
         public int JobStageId { get; set; }
         public int UserId { set; get; }
-        public virtual JobStage JobStage { get; set; }
+        public virtual JobStageDTO JobStage { get; set; }
     }
 }
