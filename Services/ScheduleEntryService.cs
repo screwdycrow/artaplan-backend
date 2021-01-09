@@ -28,10 +28,6 @@ namespace Artaplan.Services
         }
         public async Task<ScheduleEntry> Create(ScheduleEntry scheduleEntry)
         {
-            if (scheduleEntry.JobStage.Job.UserId != userId)
-            {
-                return null;
-            }
             scheduleEntry.UserId = userId;
             scheduleEntry.ScheduleEntriesId = 0;
             _context.ScheduleEntries.Add(scheduleEntry);
@@ -69,7 +65,7 @@ namespace Artaplan.Services
 
         public async Task<ScheduleEntry> Update(ScheduleEntry scheduleEntry)
         {
-            if (scheduleEntry.UserId != userId || scheduleEntry.JobStage.Job.UserId != userId)
+            if (scheduleEntry.UserId != userId)
             {
                 return null;
             }
