@@ -30,7 +30,7 @@ namespace Artaplan.Models
         public virtual DbSet<Slot> Slots { get; set; }
         public virtual DbSet<Stage> Stages { get; set; }
         public virtual DbSet<User> Users { get; set; }
-
+     
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
@@ -48,11 +48,14 @@ namespace Artaplan.Models
 
                 entity.Property(e => e.CustomerId).HasColumnName("CustomerID");
 
-                entity.Property(e => e.Email).HasMaxLength(50);
+                entity.Property(e => e.Email)
+                    .HasMaxLength(50)
+                    .HasComment("Greek_CI_AS");
 
                 entity.Property(e => e.Name)
                     .IsRequired()
-                    .HasMaxLength(50);
+                    .HasMaxLength(50)
+                    .HasComment("Greek_CI_AS");
 
                 entity.Property(e => e.UserId).HasColumnName("UserID");
 
@@ -75,7 +78,8 @@ namespace Artaplan.Models
                     .HasMaxLength(10)
                     .IsUnicode(false)
                     .HasDefaultValueSql("(getdate())")
-                    .IsFixedLength(true);
+                    .IsFixedLength(true)
+                    .HasComment("Greek_CI_AS");
 
                 entity.Property(e => e.CustomerId).HasColumnName("CustomerID");
 
@@ -84,14 +88,20 @@ namespace Artaplan.Models
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(80)
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .HasComment("Greek_CI_AS");
+
+                entity.Property(e => e.References).HasComment("Greek_CI_AS");
 
                 entity.Property(e => e.StartedAt).HasColumnType("date");
 
                 entity.Property(e => e.Status)
                     .IsRequired()
                     .HasMaxLength(50)
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .HasComment("Greek_CI_AS");
+
+                entity.Property(e => e.Tags).HasComment("Greek_CI_AS");
 
                 entity.Property(e => e.ToStartAt).HasColumnType("date");
 
@@ -152,11 +162,18 @@ namespace Artaplan.Models
 
                 entity.Property(e => e.DateTo).HasColumnType("datetime");
 
+                entity.Property(e => e.UserId).HasColumnName("UserID");
+
                 entity.HasOne(d => d.JobStage)
                     .WithMany(p => p.ScheduleEntries)
                     .HasForeignKey(d => d.JobStageId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_102");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.ScheduleEntries)
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("FK_User");
             });
 
             modelBuilder.Entity<Slot>(entity =>
@@ -165,12 +182,16 @@ namespace Artaplan.Models
 
                 entity.Property(e => e.Description)
                     .HasMaxLength(800)
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .HasComment("Greek_CI_AS");
 
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(80)
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .HasComment("Greek_CI_AS");
+
+                entity.Property(e => e.Notes).HasComment("Greek_CI_AS");
 
                 entity.Property(e => e.UserId).HasColumnName("UserID");
 
@@ -187,11 +208,16 @@ namespace Artaplan.Models
 
                 entity.HasIndex(e => e.SlotId, "fkIdx_60");
 
-                entity.Property(e => e.Description).HasMaxLength(800);
+                entity.Property(e => e.Description)
+                    .HasMaxLength(800)
+                    .HasComment("Greek_CI_AS");
 
                 entity.Property(e => e.Name)
                     .IsRequired()
-                    .HasMaxLength(80);
+                    .HasMaxLength(80)
+                    .HasComment("Greek_CI_AS");
+
+                entity.Property(e => e.Tags).HasComment("Greek_CI_AS");
 
                 entity.Property(e => e.UserId).HasColumnName("UserID");
 
@@ -215,20 +241,24 @@ namespace Artaplan.Models
                 entity.Property(e => e.Email)
                     .IsRequired()
                     .HasMaxLength(50)
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .HasComment("Greek_CI_AS");
 
                 entity.Property(e => e.PasswordHash)
                     .IsRequired()
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .HasComment("Greek_CI_AS");
 
                 entity.Property(e => e.Salt)
                     .IsRequired()
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .HasComment("Greek_CI_AS");
 
                 entity.Property(e => e.Username)
                     .IsRequired()
                     .HasMaxLength(50)
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .HasComment("Greek_CI_AS");
             });
 
             OnModelCreatingPartial(modelBuilder);
