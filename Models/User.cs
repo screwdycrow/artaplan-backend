@@ -11,6 +11,7 @@ namespace Artaplan.Models
         {
             Customers = new HashSet<Customer>();
             Jobs = new HashSet<Job>();
+            ScheduleEntries = new HashSet<ScheduleEntry>();
             Slots = new HashSet<Slot>();
             Stages = new HashSet<Stage>();
         }
@@ -23,6 +24,7 @@ namespace Artaplan.Models
 
         public virtual ICollection<Customer> Customers { get; set; }
         public virtual ICollection<Job> Jobs { get; set; }
+        public virtual ICollection<ScheduleEntry> ScheduleEntries { get; set; }
         public virtual ICollection<Slot> Slots { get; set; }
         public virtual ICollection<Stage> Stages { get; set; }
     }
