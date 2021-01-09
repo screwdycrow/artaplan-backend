@@ -11,8 +11,9 @@ namespace Artaplan.Models
         public DateTime DateFrom { get; set; }
         public DateTime DateTo { get; set; }
         public int JobStageId { get; set; }
+        public int? UserId { get; set; }
 
         public virtual JobStage JobStage { get; set; }
-        public int UserId { get; internal set; }
+        public virtual User User { get; set; }
     }
 }
