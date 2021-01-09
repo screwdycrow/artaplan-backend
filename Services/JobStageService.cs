@@ -20,14 +20,10 @@ namespace Artaplan.Services
     public class JobStageService : IJobStageService
     {
         private ArtaplanContext _context;
-        private IJobService _jobService;
-        private IStageService _stageService;
         private int userId;
-        public JobStageService(ArtaplanContext context, IUserProvider userProvider, IJobService jobService, IStageService stageService)
+        public JobStageService(ArtaplanContext context, IUserProvider userProvider)
         {
             _context = context;
-            _jobService = jobService;
-            _stageService = stageService;
             userId = userProvider.GetUserId();
         }
         public async Task<JobStage> Create(JobStage jobStage)

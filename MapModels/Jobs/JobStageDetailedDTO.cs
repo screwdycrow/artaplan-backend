@@ -1,4 +1,5 @@
-﻿using Artaplan.Models;
+﻿using Artaplan.MapModels.Stages;
+using Artaplan.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,6 @@ namespace Artaplan.MapModels.Jobs
         public DateTime? Deadline { get; set; }
         public int JobId { get; set; }
         public int StageId { get; set; }
-        public virtual Job Job { get; set; }
-        public virtual Stage Stage { get; set; }
+        public virtual StageDTO Stage { get; set; }
     }
 }
