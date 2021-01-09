@@ -25,6 +25,8 @@ namespace Artaplan.Helpers
             CreateMap<StageDTO, Stage>();
             CreateMap<JobDetailedDTO, Job>();
             CreateMap<Job, JobDetailedDTO>();
+            CreateMap<JobStageDetailedDTO, JobStage>();
+            CreateMap<JobStage, JobStageDetailedDTO>();
             CreateMap<JobStageDTO, JobStage>();
             CreateMap<JobStage, JobStageDTO>();
             CreateMap<Customer, CustomerDTO>();

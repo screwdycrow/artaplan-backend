@@ -26,6 +26,6 @@ namespace Artaplan.MapModels.Jobs
         public int CustomerId { get; set; }
         public virtual SlotDTO Slot{ get; set; }
         public virtual CustomerDTO Customer { get; set; }
-        public virtual ICollection<JobStageDTO> JobStages { get; set; }
+        public virtual ICollection<JobStageDetailedDTO> JobStages { get; set; }
     }
 }
