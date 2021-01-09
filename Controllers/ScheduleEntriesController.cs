@@ -61,11 +61,16 @@ namespace Artaplan.Controllers
 
         // POST: api/ScheduleEntries
         [HttpPost]
-        public async Task<ActionResult<ScheduleEntryDetailedDTO>> PostScheduleEntries(ScheduleEntryDTO scheduleEntryDTO)
+        public async Task<ActionResult<IEnumerable<ScheduleEntryDetailedDTO>>> PostScheduleEntries(IEnumerable<ScheduleEntryDTO> scheduleEntriesDTO)
         {
-            var scheduleEntry = _mapper.Map<ScheduleEntry>(scheduleEntryDTO);
-            scheduleEntry = await _scheduleEntryService.Create(scheduleEntry);
-            return _mapper.Map<ScheduleEntryDetailedDTO>(scheduleEntry);
+            List<ScheduleEntry> scheduleEntries = new List<ScheduleEntry>();
+            foreach (var entry in scheduleEntriesDTO)
+            {
+                var scheduleEntry = _mapper.Map<ScheduleEntry>(entry);
+                scheduleEntries.Add(await _scheduleEntryService.Create(scheduleEntry));
+
+            }
+            return _mapper.Map<List<ScheduleEntryDetailedDTO>>(scheduleEntries);
         }
 
         //DELETE: api/ScheduleEntries
