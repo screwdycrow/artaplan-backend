@@ -33,7 +33,7 @@ namespace Artaplan.Controllers
 
         // GET: api/JobStages
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<JobStageDTO>>> GetJobStages()
+        public async Task<ActionResult<IEnumerable<JobStageDetailedDTO>>> GetJobStages()
         {
             var jobStages = await _jobStageService.GetAll();
             if (!jobStages.Any())
@@ -41,13 +41,13 @@ namespace Artaplan.Controllers
                 return NotFound();
             }
 
-            return _mapper.Map<List<JobStageDTO>>(jobStages);
+            return _mapper.Map<List<JobStageDetailedDTO>>(jobStages);
 
         }
 
         // GET: api/JobStages/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<JobStageDTO>> GetJobStages(int id)
+        public async Task<ActionResult<JobStageDetailedDTO>> GetJobStages(int id)
         {
 
             var jobStage = await _jobStageService.GetById(id);
@@ -56,21 +56,21 @@ namespace Artaplan.Controllers
                 return NotFound();
             }
 
-            return _mapper.Map<JobStageDTO>(jobStage);
+            return _mapper.Map<JobStageDetailedDTO>(jobStage);
         }
 
         // POST: api/JobStages
         [HttpPost]
-        public async Task<ActionResult<JobStageDTO>> PostJobStages(JobStageDTO jobStageDTO)
+        public async Task<ActionResult<JobStageDetailedDTO>> PostJobStages(JobStageDTO jobStageDTO)
         {
             var jobStage = _mapper.Map<JobStage>(jobStageDTO);
             jobStage = await _jobStageService.Create(jobStage);
-            return _mapper.Map<JobStageDTO>(jobStage);
+            return _mapper.Map<JobStageDetailedDTO>(jobStage);
         }
 
         //DELETE: api/JobStages
         [HttpDelete("{id}")]
-        public async Task<ActionResult<JobStageDTO>> DeleteJobStage(int id)
+        public async Task<ActionResult<JobStageDetailedDTO>> DeleteJobStage(int id)
         {
             var jobStage = await _jobStageService.GetById(id);
             if (jobStage == null)
@@ -82,12 +82,12 @@ namespace Artaplan.Controllers
             {
                 return NotFound();
             }
-            return _mapper.Map<JobStageDTO>(jobStage);
+            return _mapper.Map<JobStageDetailedDTO>(jobStage);
         }
 
         //PUT: api/JobStages/5
         [HttpPut("{id}")]
-        public async Task<ActionResult<JobStageDTO>> UpdateJobStage(int id, JobStageDTO jobStageDTO)
+        public async Task<ActionResult<JobStageDetailedDTO>> UpdateJobStage(int id, JobStageDTO jobStageDTO)
         {
             var jobStage = _mapper.Map<JobStage>(jobStageDTO);
             if (jobStage.JobStageId != id)
@@ -97,14 +97,14 @@ namespace Artaplan.Controllers
             if (!_context.JobStages.Where(x => x.JobStageId == jobStage.JobStageId).Any())
             {
                 await _jobStageService.Create(jobStage);
-                return _mapper.Map<JobStageDTO>(jobStage);
+                return _mapper.Map<JobStageDetailedDTO>(jobStage);
             }
             jobStage = await _jobStageService.Update(jobStage);
             if (jobStage == null)
             {
                 return NotFound();
             }
-            return _mapper.Map<JobStageDTO>(jobStage);
+            return _mapper.Map<JobStageDetailedDTO>(jobStage);
         }
     }
 }

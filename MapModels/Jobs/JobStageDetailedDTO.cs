@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Artaplan.MapModels.Jobs
 {
-    public class JobStageDTO
+    public class JobStageDetailedDTO
     {
         public int JobStageId { get; set; }
         public bool IsFinal { get; set; }
@@ -16,5 +16,7 @@ namespace Artaplan.MapModels.Jobs
         public DateTime? Deadline { get; set; }
         public int JobId { get; set; }
         public int StageId { get; set; }
+        public virtual Job Job { get; set; }
+        public virtual Stage Stage { get; set; }
     }
 }
