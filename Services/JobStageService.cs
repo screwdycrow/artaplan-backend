@@ -56,12 +56,12 @@ namespace Artaplan.Services
 
         public async Task<IEnumerable<JobStage>> GetAll()
         {
-            return await _context.JobStages.Where(x => x.Job.UserId == userId).ToListAsync();
+            return await _context.JobStages.Where(x => x.Job.UserId == userId).Include(x => x.Job).Include(x => x.Stage).Include(x => x.ScheduleEntries).ToListAsync();
         }
 
         public async Task<JobStage> GetById(int id)
         {
-            return await _context.JobStages.Where(x => x.JobStageId == id && x.Job.UserId == userId).Include(x => x.Job).Include(x => x.Stage).FirstOrDefaultAsync();
+            return await _context.JobStages.Where(x => x.JobStageId == id && x.Job.UserId == userId).Include(x => x.Job).Include(x => x.Stage).Include(x => x.ScheduleEntries).FirstOrDefaultAsync();
         }
 
         public async Task<JobStage> Update(JobStage jobStage)

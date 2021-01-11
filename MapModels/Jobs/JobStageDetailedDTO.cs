@@ -18,5 +18,6 @@ namespace Artaplan.MapModels.Jobs
         public int JobId { get; set; }
         public int StageId { get; set; }
         public virtual StageDTO Stage { get; set; }
+        public virtual ICollection<ScheduleEntryDTO> ScheduleEntries { get; set;}
     }
 }
