@@ -18,16 +18,19 @@ namespace Artaplan.Controllers
         private readonly ArtaplanContext _context;
         private readonly IMapper _mapper;
         private readonly IJobService _jobService;
+        private readonly IJobStageService _jobStageService;
 
         public JobsController(
             ArtaplanContext context,
             IMapper mapper,
-            IJobService jobService
+            IJobService jobService,
+            IJobStageService jobStageService
             )
         {
             _mapper = mapper;
             _context = context;
             _jobService = jobService;
+            _jobStageService = jobStageService;
         }
 
         // POST: api/Jobs
@@ -102,6 +105,23 @@ namespace Artaplan.Controllers
                 return NotFound();
             }
             return _mapper.Map<JobDetailedDTO>(await _jobService.Delete(job));
+        }
+
+        //GET: api/Jobs/1/scheduleentries
+        [HttpGet("{id}/scheduleentries")]
+        public async Task<ActionResult<IEnumerable<ScheduleEntryDetailedDTO>>> GetScheduleEntries(int id)
+        {
+            HashSet<ScheduleEntry> entries = new HashSet<ScheduleEntry>();  
+            var job = await _jobService.GetById(id);
+            foreach (var stage in job.JobStages)
+             {
+                var updatedStage = await _jobStageService.GetById(stage.JobStageId);
+                foreach (var entry in updatedStage.ScheduleEntries)
+                {
+                    entries.Add(entry);
+                }
+            }
+            return _mapper.Map<List<ScheduleEntryDetailedDTO>>(entries);
         }
     }
 }
