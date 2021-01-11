@@ -155,7 +155,6 @@ namespace Artaplan.Models
                 entity.HasIndex(e => e.JobStageId, "fkIdx_102");
 
                 entity.Property(e => e.ScheduleEntriesId)
-                    .ValueGeneratedNever()
                     .HasColumnName("scheduleEntriesID");
 
                 entity.Property(e => e.DateFrom).HasColumnType("datetime");
