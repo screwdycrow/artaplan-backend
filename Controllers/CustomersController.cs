@@ -1,5 +1,6 @@
 using Artaplan.Errors;
 using Artaplan.MapModels.Customers;
+using Artaplan.MapModels.Jobs;
 using Artaplan.Models;
 using Artaplan.Services;
 using AutoMapper;
@@ -107,5 +108,13 @@ namespace Artaplan.Controllers
             }
             return _mapper.Map<CustomerDTO>(customer);
         }
-    }   
+
+        //GET: api/Customers/5/jobs
+        [HttpGet("{id}/jobs")]
+        public async Task<ActionResult<IEnumerable<JobDetailedDTO>>> GetCustomerJobs(int id)
+        {
+            var customer = await _customerService.GetById(id);
+            return _mapper.Map<List<JobDetailedDTO>>(customer.Jobs);
+        }
+    }
 }
