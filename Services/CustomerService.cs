@@ -55,12 +55,12 @@ namespace Artaplan.Services
         
         public async Task<IEnumerable<Customer>> GetAll()
         {
-            return await _context.Customers.Where(x => x.UserId == userId).ToListAsync();
+            return await _context.Customers.Where(x => x.UserId == userId).Include(x => x.User).Include(x => x.Jobs).ToListAsync();
         }
         
         public async Task<Customer> GetById(int id)
         {
-            return await _context.Customers.Where(x => x.CustomerId == id && x.UserId == userId).FirstOrDefaultAsync();
+            return await _context.Customers.Where(x => x.CustomerId == id && x.UserId == userId).Include(x => x.User).Include(x => x.Jobs).FirstOrDefaultAsync();
         }
 
         public async Task<Customer> Update(Customer customer)
