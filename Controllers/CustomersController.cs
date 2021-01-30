@@ -38,11 +38,6 @@ namespace Artaplan.Controllers
         public async Task<ActionResult<IEnumerable<CustomerDTO>>> GetCustomers()
         {
             var customers = await _customerService.GetAll();
-            if (!customers.Any())
-            {
-                return NotFound();
-            }
-
             return _mapper.Map<List<CustomerDTO>>(customers);
 
         }

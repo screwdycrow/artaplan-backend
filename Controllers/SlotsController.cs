@@ -39,10 +39,7 @@ namespace Artaplan.Controllers
         public async Task<ActionResult<IEnumerable<SlotDTO>>> GetSlots()
         {
             var slots = await _slotService.GetAll();
-            if (!slots.Any())
-            {
-                return NotFound();
-            }
+     
             return _mapper.Map<List<SlotDTO>>(slots);
         }
 
@@ -54,9 +51,8 @@ namespace Artaplan.Controllers
             Slot slot = await _slotService.GetById(id);
             if (slot == null)
             {
-                return NotFound();
+                NotFound();
             }
-
             return _mapper.Map<SlotDTO>(slot); 
         }
 

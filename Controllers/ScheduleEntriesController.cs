@@ -36,10 +36,6 @@ namespace Artaplan.Controllers
         public async Task<ActionResult<IEnumerable<ScheduleEntryDetailedDTO>>> GetScheduleEntries()
         {
             var scheduleEntries = await _scheduleEntryService.GetAll();
-            if (!scheduleEntries.Any())
-            {
-                return NotFound();
-            }
 
             return _mapper.Map<List<ScheduleEntryDetailedDTO>>(scheduleEntries);
 

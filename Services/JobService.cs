@@ -56,6 +56,7 @@ namespace Artaplan.Services
             var jobs = await _context.Jobs
                 .Where(j => j.UserId == userId)
                 .Include(j => j.JobStages)
+                .ThenInclude(js=>js.Stage)
                 .Include(j => j.Slot)
                 .Include(j => j.Customer)
                 .ToListAsync();
@@ -68,6 +69,7 @@ namespace Artaplan.Services
                    .Where(j => j.JobId == id)
                    .Where(j => j.UserId == userId)
                    .Include(j => j.JobStages)
+                   .ThenInclude(js => js.Stage)
                    .Include(j => j.Slot)
                    .Include(j => j.Customer)
                    .FirstOrDefaultAsync();

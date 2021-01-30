@@ -36,11 +36,6 @@ namespace Artaplan.Controllers
         public async Task<ActionResult<IEnumerable<StageDTO>>> GetStages()
         {
             var stages = await _stageService.GetAll();
-            if (!stages.Any())
-            {
-                return NotFound();
-            }
-
             return _mapper.Map<List<StageDTO>>(stages);
 
         }
