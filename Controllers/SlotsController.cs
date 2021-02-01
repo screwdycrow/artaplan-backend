@@ -74,7 +74,7 @@ namespace Artaplan.Controllers
             slot = await _slotService.Update(slot);
             if(slot == null)
             {
-                NotFound();
+                return NotFound();
             }
             return _mapper.Map<SlotDTO>(slot);
         }
