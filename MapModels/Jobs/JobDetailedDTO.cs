@@ -17,6 +17,8 @@ namespace Artaplan.MapModels.Jobs
         public DateTime? ToStartAt { get; set; }
         public DateTime? StartedAt { get; set; }
         public DateTime? InsertedAt { get; set; }
+        public DateTime? CancelledAt { get; set; }
+        public DateTime? FinishedAt { get; set; }
         public double Price { get; set; }
         public int Priority { get; set; }
         public int EstimatedDays { get; set; }
@@ -24,6 +26,7 @@ namespace Artaplan.MapModels.Jobs
         public int SlotId { get; set; }
         public int UserId { get; set; }
         public int CustomerId { get; set; }
+
         public virtual SlotDTO Slot{ get; set; }
         public virtual CustomerDTO Customer { get; set; }
         public virtual ICollection<JobStageDetailedDTO> JobStages { get; set; }

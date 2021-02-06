@@ -30,7 +30,7 @@ namespace Artaplan.Models
         public virtual DbSet<Slot> Slots { get; set; }
         public virtual DbSet<Stage> Stages { get; set; }
         public virtual DbSet<User> Users { get; set; }
-     
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
@@ -39,6 +39,7 @@ namespace Artaplan.Models
 
             }
         }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -74,6 +75,8 @@ namespace Artaplan.Models
 
                 entity.HasIndex(e => e.CustomerId, "fkIdx_82");
 
+                entity.Property(e => e.CancelledAt).HasColumnType("datetime");
+
                 entity.Property(e => e.Color)
                     .HasMaxLength(10)
                     .IsUnicode(false)
@@ -82,6 +85,8 @@ namespace Artaplan.Models
                     .HasComment("Greek_CI_AS");
 
                 entity.Property(e => e.CustomerId).HasColumnName("CustomerID");
+
+                entity.Property(e => e.FinishedAt).HasColumnType("datetime");
 
                 entity.Property(e => e.InsertedAt).HasColumnType("datetime");
 
@@ -150,12 +155,11 @@ namespace Artaplan.Models
             modelBuilder.Entity<ScheduleEntry>(entity =>
             {
                 entity.HasKey(e => e.ScheduleEntriesId)
-                    .HasName("PK_schedule");
+                    .HasName("PK_scheduleentries");
 
                 entity.HasIndex(e => e.JobStageId, "fkIdx_102");
 
-                entity.Property(e => e.ScheduleEntriesId)
-                    .HasColumnName("scheduleEntriesID");
+                entity.Property(e => e.ScheduleEntriesId).HasColumnName("ScheduleEntriesID");
 
                 entity.Property(e => e.DateFrom).HasColumnType("datetime");
 

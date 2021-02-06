@@ -27,6 +27,8 @@ namespace Artaplan.Models
         public int SlotId { get; set; }
         public int UserId { get; set; }
         public int CustomerId { get; set; }
+        public DateTime? CancelledAt { get; set; }
+        public DateTime? FinishedAt { get; set; }
 
         public virtual Customer Customer { get; set; }
         public virtual Slot Slot { get; set; }
