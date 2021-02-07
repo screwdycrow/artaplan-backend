@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using Artaplan.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
@@ -39,7 +40,6 @@ namespace Artaplan.Models
 
             }
         }
-
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -85,6 +85,8 @@ namespace Artaplan.Models
                     .HasComment("Greek_CI_AS");
 
                 entity.Property(e => e.CustomerId).HasColumnName("CustomerID");
+
+                entity.Property(e => e.Description).HasMaxLength(1);
 
                 entity.Property(e => e.FinishedAt).HasColumnType("datetime");
 

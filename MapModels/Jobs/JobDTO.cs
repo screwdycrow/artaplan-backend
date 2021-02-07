@@ -15,7 +15,7 @@ namespace Artaplan.MapModels.Jobs
         public DateTime? ToStartAt { get; set; }
         public DateTime? StartedAt { get; set; }
         public DateTime? InsertedAt { get; set; }
-
+        public string Description { get; set; }
         public double Price { get; set; }
         public int Priority { get; set; }
         public int EstimatedDays { get; set; }
