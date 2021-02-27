@@ -21,14 +21,22 @@ namespace Artaplan.Helpers
             CreateMap<UserDTO, User>();
             CreateMap<Slot, SlotDTO>();
             CreateMap<SlotDTO, Slot>();
+            CreateMap<Slot, SlotSummary>();
+            CreateMap<SlotSummary, Slot>();
             CreateMap<Stage, StageDTO>();
             CreateMap<StageDTO, Stage>();
+            CreateMap<StageSummary, Stage>();
+            CreateMap<Stage, StageSummary>();
             CreateMap<JobDetailedDTO, Job>();
             CreateMap<Job, JobDetailedDTO>();
             CreateMap<JobStageDetailedDTO, JobStage>();
             CreateMap<JobStage, JobStageDetailedDTO>();
             CreateMap<JobStageDTO, JobStage>();
+            CreateMap<JobStageSummary, JobStage>();
+            CreateMap<JobStage, JobStageSummary>();
             CreateMap<JobStage, JobStageDTO>();
+            CreateMap<JobSummary, Job>();
+            CreateMap<Job, JobSummary>();
             CreateMap<Customer, CustomerDTO>();
             CreateMap<CustomerDTO, Customer>();
             CreateMap<Job, JobDTO>();
@@ -37,6 +45,7 @@ namespace Artaplan.Helpers
             CreateMap<ScheduleEntryDTO, ScheduleEntry>();
             CreateMap<ScheduleEntry, ScheduleEntryDetailedDTO>();
             CreateMap<ScheduleEntryDetailedDTO, ScheduleEntry>();
+ 
         }
     }
 }

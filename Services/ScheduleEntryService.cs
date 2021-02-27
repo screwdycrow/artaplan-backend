@@ -32,6 +32,7 @@ namespace Artaplan.Services
             scheduleEntry.ScheduleEntriesId = 0;
             _context.ScheduleEntries.Add(scheduleEntry);
             await _context.SaveChangesAsync();
+            scheduleEntry = await GetById(scheduleEntry.ScheduleEntriesId);
             return scheduleEntry;
         }
 
@@ -55,12 +56,22 @@ namespace Artaplan.Services
 
         public async Task<IEnumerable<ScheduleEntry>> GetAll()
         {
-            return await _context.ScheduleEntries.Where(x => x.UserId == userId).Include(x => x.JobStage).ToListAsync();
+            return await _context.ScheduleEntries.Where(x => x.UserId == userId)
+                .Include(x => x.JobStage)
+                .ThenInclude(js=>js.Stage)
+                .Include(x => x.JobStage)
+                .ThenInclude(js => js.Job)
+                .ToListAsync();
         }
 
         public async Task<ScheduleEntry> GetById(int id)
         {
-            return await _context.ScheduleEntries.Where(x => x.ScheduleEntriesId == id && x.UserId == userId).Include(x => x.JobStage).FirstOrDefaultAsync();
+            return await _context.ScheduleEntries.Where(x => x.ScheduleEntriesId == id && x.UserId == userId)
+                .Include(x => x.JobStage)
+                .ThenInclude(js => js.Stage)
+                .Include(x => x.JobStage)
+                .ThenInclude(js => js.Job)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<ScheduleEntry> Update(ScheduleEntry scheduleEntry)
@@ -71,6 +82,8 @@ namespace Artaplan.Services
             }
             _context.Entry(scheduleEntry).State = EntityState.Modified;
             await _context.SaveChangesAsync();
+            scheduleEntry = await GetById(scheduleEntry.ScheduleEntriesId);
+           
             return scheduleEntry;
         }
     }
