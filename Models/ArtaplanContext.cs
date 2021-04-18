@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using Artaplan.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
@@ -86,8 +85,6 @@ namespace Artaplan.Models
 
                 entity.Property(e => e.CustomerId).HasColumnName("CustomerID");
 
-                entity.Property(e => e.Description).HasMaxLength(1);
-
                 entity.Property(e => e.FinishedAt).HasColumnType("datetime");
 
                 entity.Property(e => e.InsertedAt).HasColumnType("datetime");
@@ -166,6 +163,14 @@ namespace Artaplan.Models
                 entity.Property(e => e.DateFrom).HasColumnType("datetime");
 
                 entity.Property(e => e.DateTo).HasColumnType("datetime");
+
+                entity.Property(e => e.IsDeadline)
+                    .HasColumnName("isDeadline")
+                    .HasDefaultValueSql("('FALSE')");
+
+                entity.Property(e => e.IsDone)
+                    .HasColumnName("isDone")
+                    .HasDefaultValueSql("('FALSE')");
 
                 entity.Property(e => e.UserId).HasColumnName("UserID");
 

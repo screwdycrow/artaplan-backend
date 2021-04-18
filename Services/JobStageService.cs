@@ -15,16 +15,20 @@ namespace Artaplan.Services
         Task<JobStage> Delete(JobStage jobStage);
         Task<JobStage> Update(JobStage jobStage);
         Task<JobStage> Create(JobStage jobStage);
+        Task<JobStage> UpdateWorkHours(int id);
+        Task<JobStage> UpdateJobHours(int id, int Hours);
     }
 
     public class JobStageService : IJobStageService
     {
         private ArtaplanContext _context;
         private int userId;
-        public JobStageService(ArtaplanContext context, IUserProvider userProvider)
+        private IScheduleEntryService _scheduleEntryService;
+        public JobStageService(ArtaplanContext context, IUserProvider userProvider, IScheduleEntryService scheduleEntryService)
         {
             _context = context;
             userId = userProvider.GetUserId();
+            _scheduleEntryService = scheduleEntryService;
         }
         public async Task<JobStage> Create(JobStage jobStage)
         {
@@ -71,6 +75,26 @@ namespace Artaplan.Services
             _context.Entry(jobStage).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             return jobStage;
+        }
+
+        public async Task<JobStage> UpdateJobHours(int id,int jobHours)
+        {
+
+            JobStage jobstage = new JobStage() { JobStageId = id, JobHours = jobHours };
+            _context.JobStages.Attach(jobstage);
+            _context.Entry(jobstage).Property(js => js.JobHours).IsModified = true;
+            await _context.SaveChangesAsync();
+            return await GetById(id);
+        }
+
+        public async Task<JobStage> UpdateWorkHours(int id)
+        {
+            List<ScheduleEntry> entries = await _scheduleEntryService.GetByJobStageId(id, true);
+            JobStage js = await GetById(id);
+            js.WorkHours = entries.Count;
+          
+            return await Update(js);
+
         }
 
         private async Task<bool> BelongsToUser(JobStage jobStage)

@@ -12,6 +12,8 @@ namespace Artaplan.Models
         public int JobStageId { get; set; }
         public int? UserId { get; set; }
         public int ScheduleEntriesId { get; set; }
+        public bool? IsDone { get; set; }
+        public bool? IsDeadline { get; set; }
 
         public virtual JobStage JobStage { get; set; }
         public virtual User User { get; set; }

@@ -12,6 +12,7 @@ namespace Artaplan.MapModels.Jobs
         public DateTime DateFrom { get; set; }
         public DateTime DateTo { get; set; }
         public int JobStageId { get; set; }
+        public bool? IsDone { get; set; }
         public int UserId { set; get; }
         public virtual JobStageSummary JobStage { get; set; }
 

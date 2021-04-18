@@ -15,11 +15,15 @@ namespace Artaplan.Services
         Task<ScheduleEntry> Delete(ScheduleEntry scheduleEntry);
         Task<ScheduleEntry> Update(ScheduleEntry scheduleEntry);
         Task<ScheduleEntry> Create(ScheduleEntry scheduleEntry);
+        Task<List<ScheduleEntry>> GetByJobStageId(int id,bool isDone);
+        Task<ScheduleEntry> setDone(int id, bool isDone);
+
     }
 
     public class ScheduleEntryService : IScheduleEntryService
     {
         private ArtaplanContext _context;
+        private IJobStageService _jobStageService;
         private int userId;
         public ScheduleEntryService(ArtaplanContext context, IUserProvider userProvider)
         {
@@ -64,6 +68,12 @@ namespace Artaplan.Services
                 .ToListAsync();
         }
 
+        public async Task<List<ScheduleEntry>> GetByJobStageId(int id,bool isDone)
+        {
+            return await _context.ScheduleEntries
+                .Where(x => x.JobStageId == id && x.UserId == userId && x.IsDone == isDone)
+                .ToListAsync();
+        }
         public async Task<ScheduleEntry> GetById(int id)
         {
             return await _context.ScheduleEntries.Where(x => x.ScheduleEntriesId == id && x.UserId == userId)
@@ -72,6 +82,14 @@ namespace Artaplan.Services
                 .Include(x => x.JobStage)
                 .ThenInclude(js => js.Job)
                 .FirstOrDefaultAsync();
+        }
+
+        public async Task<ScheduleEntry> setDone(int id, bool isDone)
+        {
+            var scheduleEntry = await GetById(id);
+            scheduleEntry.IsDone = isDone;
+            ScheduleEntry entry = await Update(scheduleEntry);
+            return entry;
         }
 
         public async Task<ScheduleEntry> Update(ScheduleEntry scheduleEntry)

@@ -19,16 +19,19 @@ namespace Artaplan.Controllers
         private readonly ArtaplanContext _context;
         private readonly IMapper _mapper;
         private readonly IScheduleEntryService _scheduleEntryService;
+        private readonly IJobStageService _jobStageService;
 
         public ScheduleEntriesController(
             ArtaplanContext context,
             IMapper mapper,
-            IScheduleEntryService scheduleEntryService
+            IScheduleEntryService scheduleEntryService,
+            IJobStageService jobStageService
             )
         {
             _mapper = mapper;
             _context = context;
             _scheduleEntryService = scheduleEntryService;
+            _jobStageService = jobStageService;
         }
 
         // GET: api/ScheduleEntries
@@ -57,17 +60,18 @@ namespace Artaplan.Controllers
 
         // POST: api/ScheduleEntries
         [HttpPost]
-        public async Task<ActionResult<IEnumerable<ScheduleEntryDetailedDTO>>> PostScheduleEntries(IEnumerable<ScheduleEntryDTO> scheduleEntriesDTO)
+        public async Task<ActionResult<ScheduleEntryDetailedDTO>> PostScheduleEntries(ScheduleEntryDTO scheduleEntryDTO)
         {
-            List<ScheduleEntry> scheduleEntries = new List<ScheduleEntry>();
-            foreach (var entry in scheduleEntriesDTO)
+            var scheduleEntry = _mapper.Map<ScheduleEntry>(scheduleEntryDTO);
+            scheduleEntry = await _scheduleEntryService.Create(scheduleEntry);
+            if (scheduleEntry == null)
             {
-                var scheduleEntry = _mapper.Map<ScheduleEntry>(entry);
-                scheduleEntries.Add(await _scheduleEntryService.Create(scheduleEntry));
-
+                return NotFound();
             }
-            return _mapper.Map<List<ScheduleEntryDetailedDTO>>(scheduleEntries);
+            return _mapper.Map<ScheduleEntryDetailedDTO>(scheduleEntry);
+
         }
+
 
         //DELETE: api/ScheduleEntries
         [HttpDelete("{id}")]
@@ -79,10 +83,19 @@ namespace Artaplan.Controllers
                 return NotFound();
             }
             scheduleEntry = await _scheduleEntryService.Delete(scheduleEntry);
+            await _jobStageService.UpdateWorkHours(scheduleEntry.JobStageId);
             if (scheduleEntry == null)
             {
                 return NotFound();
             }
+            return _mapper.Map<ScheduleEntryDetailedDTO>(scheduleEntry);
+        }
+        [HttpPatch("{id}/status/{isDone}")]
+        //Patch: api/ScheduleEntries/5/Done
+        public async Task<ActionResult<ScheduleEntryDetailedDTO>> SetDone(int id, string isDone)
+        {
+            var scheduleEntry = await _scheduleEntryService.setDone(id, (isDone == "done") ? true : false); 
+            await _jobStageService.UpdateWorkHours(scheduleEntry.JobStageId);
             return _mapper.Map<ScheduleEntryDetailedDTO>(scheduleEntry);
         }
 
