@@ -90,22 +90,16 @@ namespace Artaplan.Controllers
             return _mapper.Map<SlotDTO>(slot);
         }
 
-        // DELETE: api/Slots/5
+        //DELETE: api/Slots/1
         [HttpDelete("{id}")]
-        public async Task<ActionResult<SlotDTO>> DeleteSlots(int id)
+        public async Task<ActionResult<SlotDTO>> DeleteJob(int id)
         {
-            var slots = await _context.Slots.FindAsync(id);
-            if (slots == null)
+            var slot = await _slotService.GetById(id);
+            if (slot == null)
             {
                 return NotFound();
             }
-            _context.Slots.Remove(slots);
-            await _context.SaveChangesAsync();
-            if (slots == null)
-            {
-                return NotFound();
-            }
-            return _mapper.Map<SlotDTO>(slots);
+            return _mapper.Map<SlotDTO>(await _slotService.Delete(slot));
         }
     }
 }

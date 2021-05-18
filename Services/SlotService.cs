@@ -46,6 +46,9 @@ namespace Artaplan.Services
             }
             try
             {
+                var stages = await _context.Stages.Where(s => s.SlotId == slot.SlotId).ToListAsync();
+                _context.Stages.RemoveRange(stages);
+                await _context.SaveChangesAsync();
                 _context.Slots.Remove(slot);
                 await _context.SaveChangesAsync();
                 return slot;

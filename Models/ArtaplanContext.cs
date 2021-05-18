@@ -56,7 +56,7 @@ namespace Artaplan.Models
                     .HasMaxLength(50)
                     .HasComment("Greek_CI_AS");
 
-                entity.Property(e => e.Notes).HasMaxLength(1);
+                entity.Property(e => e.Notes).HasMaxLength(800);
 
                 entity.Property(e => e.UserId).HasColumnName("UserID");
 
