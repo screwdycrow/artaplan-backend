@@ -1,17 +1,16 @@
-﻿using System;
+﻿
+
+using System;
 using Artaplan.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.Extensions.Options;
-
 #nullable disable
-
 namespace Artaplan.Models
 {
     public partial class ArtaplanContext : DbContext
     {
         private AppSettings _appSettings;
-
         public ArtaplanContext()
         {
         }
@@ -57,6 +56,8 @@ namespace Artaplan.Models
                     .HasMaxLength(50)
                     .HasComment("Greek_CI_AS");
 
+                entity.Property(e => e.Notes).HasMaxLength(1);
+
                 entity.Property(e => e.UserId).HasColumnName("UserID");
 
                 entity.HasOne(d => d.User)
@@ -84,6 +85,8 @@ namespace Artaplan.Models
                     .HasComment("Greek_CI_AS");
 
                 entity.Property(e => e.CustomerId).HasColumnName("CustomerID");
+
+                entity.Property(e => e.Deadline).HasColumnType("datetime");
 
                 entity.Property(e => e.FinishedAt).HasColumnType("datetime");
 
@@ -114,13 +117,11 @@ namespace Artaplan.Models
                 entity.HasOne(d => d.Customer)
                     .WithMany(p => p.Jobs)
                     .HasForeignKey(d => d.CustomerId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_82");
 
                 entity.HasOne(d => d.Slot)
                     .WithMany(p => p.Jobs)
                     .HasForeignKey(d => d.SlotId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_43");
 
                 entity.HasOne(d => d.User)
@@ -141,13 +142,11 @@ namespace Artaplan.Models
                 entity.HasOne(d => d.Job)
                     .WithMany(p => p.JobStages)
                     .HasForeignKey(d => d.JobId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_71");
 
                 entity.HasOne(d => d.Stage)
                     .WithMany(p => p.JobStages)
                     .HasForeignKey(d => d.StageId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_74");
             });
 
@@ -177,7 +176,6 @@ namespace Artaplan.Models
                 entity.HasOne(d => d.JobStage)
                     .WithMany(p => p.ScheduleEntries)
                     .HasForeignKey(d => d.JobStageId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_102");
 
                 entity.HasOne(d => d.User)

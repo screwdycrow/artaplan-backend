@@ -27,7 +27,7 @@ namespace Artaplan.MapModels.Jobs
         public int UserId { get; set; }
         public int CustomerId { get; set; }
         public string Description { get; set; }
-
+        public DateTime? Deadline { get; set; }
 
         public virtual SlotDTO Slot{ get; set; }
         public virtual CustomerDTO Customer { get; set; }

@@ -69,7 +69,8 @@ namespace Artaplan.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<CustomerDTO>> DeleteCustomer(int id)
         {
-            var customer = await _customerService.GetById(id);
+            Customer customer = _context.Customers.Where(x => x.CustomerId == id).FirstOrDefault();
+
             if (customer == null)
             {
                 return NotFound();  

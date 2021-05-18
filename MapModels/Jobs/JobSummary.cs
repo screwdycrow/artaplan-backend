@@ -11,5 +11,6 @@ namespace Artaplan.MapModels.Jobs
         public int JobId { get; set; }
         public string Color { get; set; }
         public string Name { get; set; }
+        public DateTime? Deadline { get; set; }
     }
 }

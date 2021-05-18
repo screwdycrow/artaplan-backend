@@ -3,8 +3,8 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:59114/",
-      "sslPort": 44363
+      "applicationUrl": "http://localhost:59779/",
+      "sslPort": 44356
     }
   },
   "profiles": {
@@ -14,7 +14,7 @@
       "environmentVariables": {
         "AppSettings__Secret": "OhioAlabamaWithApinchOfBarackObama",
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "AppSettings__ConnectionString": "Data Source=artaplan.database.windows.net;Initial Catalog=Artaplan;User ID=screwdycrow;Password=SvhfDnwEkLDSu1kH;Connect Timeout=60;Encrypt=True;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False"
+        "AppSettings__ConnectionString": "Data Source=artaplan.database.windows.net;Initial Catalog=Artaplan;User ID=screwdycrow;Password=SvhfDnwEkLDSu1kH;Connect Timeout=60;Encrypt=True;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False",
       }
     },
     "Artaplan": {
@@ -22,6 +22,7 @@
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
+
       },
       "applicationUrl": "https://localhost:5001;http://localhost:5000"
     }

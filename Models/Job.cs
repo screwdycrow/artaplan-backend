@@ -30,6 +30,7 @@ namespace Artaplan.Models
         public DateTime? CancelledAt { get; set; }
         public DateTime? FinishedAt { get; set; }
         public string Description { get; set; }
+        public DateTime? Deadline { get; set; }
 
         public virtual Customer Customer { get; set; }
         public virtual Slot Slot { get; set; }

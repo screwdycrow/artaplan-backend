@@ -21,6 +21,7 @@ namespace Artaplan.MapModels.Jobs
         public int EstimatedDays { get; set; }
         public string References { get; set; }
         public int SlotId { get; set; }
+        public DateTime? Deadline { get; set; }
         public int UserId { get; set; }
         public int CustomerId { get; set; }
         public DateTime? CancelledAt { get; set; }
