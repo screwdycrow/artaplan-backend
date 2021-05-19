@@ -15,17 +15,19 @@ namespace Artaplan.Services
         IEnumerable<User> GetAll();
         User Create(User user, string password);
         Task<User> Update(User user, string password = null);
+        Task<User> ChangePassword(User user, string password);
         void Delete(int id);
         User GetById(int id);
     }
     public class UserService : IUserService
     {
         private ArtaplanContext _context;
+        private IUserProvider _userProvider;
 
-
-        public UserService(ArtaplanContext context)
+        public UserService(ArtaplanContext context, IUserProvider userProvider)
         {
             _context = context;
+            _userProvider = userProvider;
         }
 
         public User Authenticate(string username, string password)
@@ -108,9 +110,27 @@ namespace Artaplan.Services
         {
             throw new NotImplementedException();
         }
-      
+
+        public async Task<User> ChangePassword(User user, string password = null)
+        {
+            if (user.UserId != _userProvider.GetUserId())
+            {
+                return null;
+            }
+            CreatePasswordHash(password, out byte[] passwordHash, out byte[] passwordSalt);
+
+            user.PasswordHash = Convert.ToBase64String(passwordHash);
+            user.Salt = Convert.ToBase64String(passwordSalt); _context.Entry(user).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+            return user;
+        }
+    
         public async Task<User> Update(User user, string password = null)
         {
+            if(user.UserId != _userProvider.GetUserId())
+            {
+                return null; 
+            }
             _context.Entry(user).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             return user;

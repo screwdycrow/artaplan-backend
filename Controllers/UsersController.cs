@@ -129,6 +129,19 @@ namespace Artaplan.Controllers
             user = await _userService.Update(user);
             return user;
         }
+        public async Task<ActionResult<User>> ChangePassword(int id, User user)
+        {
+            if (id != user.UserId)
+            {
+                return BadRequest();
+            }
+            if (await _context.Users.FindAsync(user.UserId) == null)
+            {
+                return NotFound();
+            }
+            user = await _userService.Update(user);
+            return user;
+        }
 
         // POST: api/Users/register
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
