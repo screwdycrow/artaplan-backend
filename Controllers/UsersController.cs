@@ -129,18 +129,28 @@ namespace Artaplan.Controllers
             user = await _userService.Update(user);
             return user;
         }
-        public async Task<ActionResult<User>> ChangePassword(int id, User user)
+
+        [HttpPost("changePassword/{id}")]
+        public async Task<ActionResult<bool>> ChangePassword(int id, [FromBody] UpdateModel userModel)
         {
-            if (id != user.UserId)
+            if(userModel.Password == null)
             {
                 return BadRequest();
             }
-            if (await _context.Users.FindAsync(user.UserId) == null)
+            User user = await _context.Users.FindAsync(id);
+            if ( user == null)
             {
                 return NotFound();
             }
-            user = await _userService.Update(user);
-            return user;
+            bool result = await _userService.ChangePassword(user,userModel.Password);
+            if (result)
+            {
+                return result;
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
         // POST: api/Users/register

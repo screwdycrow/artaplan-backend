@@ -20,6 +20,7 @@ namespace Artaplan.Controllers
         private readonly IJobService _jobService;
         private readonly IJobStageService _jobStageService;
 
+
         public JobsController(
             ArtaplanContext context,
             IMapper mapper,
@@ -80,6 +81,9 @@ namespace Artaplan.Controllers
             try
             {
                 job = await _jobService.Update(job);
+                foreach (JobStage stage in job.JobStages){
+                    await _jobStageService.Update(stage);
+                }
             }
             catch
             {

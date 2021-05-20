@@ -15,7 +15,7 @@ namespace Artaplan.Services
         IEnumerable<User> GetAll();
         User Create(User user, string password);
         Task<User> Update(User user, string password = null);
-        Task<User> ChangePassword(User user, string password);
+        Task<bool> ChangePassword(User user, string password);
         void Delete(int id);
         User GetById(int id);
     }
@@ -111,18 +111,18 @@ namespace Artaplan.Services
             throw new NotImplementedException();
         }
 
-        public async Task<User> ChangePassword(User user, string password = null)
+        public async Task<bool> ChangePassword(User user, string password = null)
         {
             if (user.UserId != _userProvider.GetUserId())
             {
-                return null;
+                return false;
             }
-            CreatePasswordHash(password, out byte[] passwordHash, out byte[] passwordSalt);
-
+       CreatePasswordHash(password, out byte[] passwordHash, out byte[] passwordSalt);
             user.PasswordHash = Convert.ToBase64String(passwordHash);
-            user.Salt = Convert.ToBase64String(passwordSalt); _context.Entry(user).State = EntityState.Modified;
+            user.Salt = Convert.ToBase64String(passwordSalt);            
+            _context.Entry(user).State = EntityState.Modified;
             await _context.SaveChangesAsync();
-            return user;
+            return true;
         }
     
         public async Task<User> Update(User user, string password = null)
