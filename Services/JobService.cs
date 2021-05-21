@@ -85,6 +85,7 @@ namespace Artaplan.Services
             }
             _context.Entry(job).State = EntityState.Modified;
             await _context.SaveChangesAsync();
+
             return job;
         }
     }

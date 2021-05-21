@@ -60,8 +60,7 @@ namespace Artaplan.Services
 
         public async Task<Stage> Update(Stage stage)
         {
-            if (stage.UserId != userId)
-                return null;
+            if (stage.UserId != userId) return null;
             _context.Entry(stage).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             return stage;

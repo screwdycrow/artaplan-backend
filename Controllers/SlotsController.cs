@@ -22,16 +22,19 @@ namespace Artaplan.Controllers
         private readonly ArtaplanContext _context;
         private readonly IMapper _mapper;
         private readonly ISlotService _slotService;
+        private readonly IStageService _stageService;
 
         public SlotsController(
             ArtaplanContext context,
             IMapper mapper,
-            ISlotService slotService
+            ISlotService slotService,
+            IStageService stageService
             )
         {
             _mapper = mapper;
             _context = context;
             _slotService = slotService;
+            _stageService = stageService;
         }
 
         // GET: api/Slots
@@ -72,7 +75,12 @@ namespace Artaplan.Controllers
                 return _mapper.Map<SlotDTO>(await _slotService.Create(slot));
             }
             slot = await _slotService.Update(slot);
-            if(slot == null)
+            foreach (Stage stage in slot.Stages)
+            {
+                await _stageService.Update(stage);
+            }
+
+            if (slot == null)
             {
                 return NotFound();
             }
